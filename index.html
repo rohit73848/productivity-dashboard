@@ -71,6 +71,32 @@
                 <h3>Quick Notes</h3>
                 <textarea id="quick-notes" placeholder="Write your thoughts here... Auto-saved!"></textarea>
             </div>
+
+            <!-- Main Focus (3D Flip Card) -->
+            <div class="widget focus-widget">
+                <h3>Main Focus of Today</h3>
+                
+                <!-- 3D Flip Container-->
+                <div class="flip-container" id="focus-container">
+                    <div class="flipper" id="focus-flipper">
+                        
+                        <!-- Front Side  -->
+                        <div class="front">
+                            <input type="text" id="focus-input" placeholder="What is your main focus today?">
+                        </div>
+                        
+                        <!-- Back Side (Focus Display) -->
+                        <div class="back">
+                            <div class="focus-display-content" id="focus-display-content">
+                                <i class="ri-checkbox-blank-circle-line" id="focus-check"></i>
+                                <span id="focus-text"></span>
+                                <button id="focus-delete"><i class="ri-close-line"></i></button>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
       </main>
     </div>
     <script src="script.js"></script>

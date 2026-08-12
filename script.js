@@ -182,14 +182,69 @@ resetTimerBtn.addEventListener("click", () => {
 });
 
 // --- Quick Notes Logic (Auto-save) ---
-const quickNotes = document.getElementById('quick-notes');
+const quickNotes = document.getElementById("quick-notes");
 
-const savedNotes = localStorage.getItem('dashboard_notes');
+const savedNotes = localStorage.getItem("dashboard_notes");
 if (savedNotes) {
-    quickNotes.value = savedNotes;
+  quickNotes.value = savedNotes;
 }
 
-quickNotes.addEventListener('input', (e) => {
-    localStorage.setItem('dashboard_notes', e.target.value);
+quickNotes.addEventListener("input", (e) => {
+  localStorage.setItem("dashboard_notes", e.target.value);
+});
+// --- Main Focus Logic (3D Flip Card) ---
+const focusInput = document.getElementById("focus-input");
+const focusFlipper = document.getElementById("focus-flipper");
+const focusText = document.getElementById("focus-text");
+const focusCheck = document.getElementById("focus-check");
+const focusDelete = document.getElementById("focus-delete");
+const focusDisplayContent = document.getElementById("focus-display-content");
+
+let savedFocus = JSON.parse(localStorage.getItem("dashboard_focus"));
+
+function updateFocusUI() {
+  if (savedFocus && savedFocus.text) {
+    focusText.textContent = savedFocus.text;
+    focusFlipper.classList.add("flipped");
+
+    if (savedFocus.completed) {
+      focusDisplayContent.classList.add("focus-completed");
+      focusCheck.classList.replace(
+        "ri-checkbox-blank-circle-line",
+        "ri-checkbox-circle-fill",
+      );
+    } else {
+      focusDisplayContent.classList.remove("focus-completed");
+      focusCheck.classList.replace(
+        "ri-checkbox-circle-fill",
+        "ri-checkbox-blank-circle-line",
+      );
+    }
+  } else {
+    focusFlipper.classList.remove("flipped");
+    focusInput.value = "";
+  }
+}
+
+updateFocusUI();
+
+focusInput.addEventListener("keypress", (e) => {
+  if (e.key === "Enter" && e.target.value.trim() !== "") {
+    savedFocus = { text: e.target.value.trim(), completed: false };
+    localStorage.setItem("dashboard_focus", JSON.stringify(savedFocus));
+    updateFocusUI();
+  }
+});
+
+focusCheck.addEventListener("click", () => {
+  savedFocus.completed = !savedFocus.completed;
+  localStorage.setItem("dashboard_focus", JSON.stringify(savedFocus));
+  updateFocusUI();
+});
+
+focusDelete.addEventListener("click", () => {
+  savedFocus = null;
+  localStorage.removeItem("dashboard_focus");
+  updateFocusUI();
 });
 renderTasks();
