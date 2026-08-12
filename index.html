@@ -13,29 +13,46 @@
   </head>
   <body>
     <div class="dashboard-container">
-        <!-- Header Section-->
-        <header class="header">
-            <h2>Dashboard</h2>
-            <!-- Theme Change Button -->
-            <button class="theme-toggle-btn" id="theme-btn">
-                <i class="ri-moon-line" id="theme-icon"></i>
-            </button>
-        </header>
-        
-        <!-- Dashboard main grid-->
-        <main class="dashboard-grid">
+      <!-- Header Section-->
+      <header class="header">
+        <h2>Dashboard</h2>
+        <!-- Theme Change Button -->
+        <button class="theme-toggle-btn" id="theme-btn">
+          <i class="ri-moon-line" id="theme-icon"></i>
+        </button>
+      </header>
+
+      <!-- Dashboard main grid-->
+      <main class="dashboard-grid">
+        <div class="widget greeting-widget">
+          <div class="time-container">
+            <h1 id="current-time">00:00</h1>
+            <span id="am-pm">AM</span>
+          </div>
+          <h3 id="greeting-message">Good Morning!</h3>
+          <p id="current-date">Loading date...</p>
+        </div>
+
+        <!-- To-Do List -->
+        <div class="widget todo-widget">
+          <h3>My Tasks</h3>
+
+          <!-- Input and Button -->
+          <div class="todo-input-container">
+            <input
+              type="text"
+              id="task-input"
+              placeholder="Add a new task..."
+            />
+            <button id="add-task-btn"><i class="ri-add-line"></i></button>
+          </div>
+
+          <!-- Task List Container-->
+          <ul id="task-list" class="task-list">
             
-            <div class="widget greeting-widget">
-                <div class="time-container">
-                    <h1 id="current-time">00:00</h1>
-                    <span id="am-pm">AM</span>
-                </div>
-                <h3 id="greeting-message">Good Morning!</h3>
-                <p id="current-date">Loading date...</p>
-            </div>
-
-
-        </main>
+          </ul>
+        </div>
+      </main>
     </div>
     <script src="script.js"></script>
   </body>

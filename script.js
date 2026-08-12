@@ -62,3 +62,69 @@ function updateClockAndGreeting() {
 
 updateClockAndGreeting();
 setInterval(updateClockAndGreeting, 1000);
+// --- To-Do List Logic ---
+const taskInput = document.getElementById('task-input');
+const addTaskBtn = document.getElementById('add-task-btn');
+const taskList = document.getElementById('task-list');
+
+let tasks = JSON.parse(localStorage.getItem('dashboard_tasks')) || [];
+
+function renderTasks() {
+    taskList.innerHTML = ''; 
+
+    tasks.forEach((task, index) => {
+        const li = document.createElement('li');
+        li.className = `task-item ${task.completed ? 'completed' : ''}`;
+        
+        li.innerHTML = `
+            <div class="task-content" data-index="${index}">
+                <i class="${task.completed ? 'ri-checkbox-circle-fill' : 'ri-checkbox-blank-circle-line'}"></i>
+                <span class="task-text">${task.text}</span>
+            </div>
+            <button class="delete-btn" data-index="${index}">
+                <i class="ri-delete-bin-line"></i>
+            </button>
+        `;
+        taskList.appendChild(li);
+    });
+}
+
+// New Task Add Logic
+function addTask() {
+    const text = taskInput.value.trim();
+    if (text !== '') {
+        tasks.push({ text: text, completed: false });
+        localStorage.setItem('dashboard_tasks', JSON.stringify(tasks));
+        taskInput.value = ''; 
+        renderTasks(); 
+    }
+}
+
+addTaskBtn.addEventListener('click', addTask);
+
+taskInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') addTask();
+});
+
+// --- Event Delegation / Event Bubbling ---
+taskList.addEventListener('click', (e) => {
+    
+    const deleteBtn = e.target.closest('.delete-btn');
+    if (deleteBtn) {
+        const index = deleteBtn.getAttribute('data-index');
+        tasks.splice(index, 1); // Array থেকে রিমুভ
+        localStorage.setItem('dashboard_tasks', JSON.stringify(tasks)); // স্টোরেজ আপডেট
+        renderTasks();
+        return;
+    }
+
+    const taskContent = e.target.closest('.task-content');
+    if (taskContent) {
+        const index = taskContent.getAttribute('data-index');
+        tasks[index].completed = !tasks[index].completed; // false থাকলে true হবে, true থাকলে false
+        localStorage.setItem('dashboard_tasks', JSON.stringify(tasks));
+        renderTasks();
+    }
+});
+
+renderTasks();
