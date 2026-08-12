@@ -48,7 +48,7 @@ function updateClockAndGreeting() {
     dateElement.textContent = now.toLocaleDateString('en-US', options);
 
     // --- 3. Greeting Logic---
-    const currentHour = now.getHours(); // 24 ঘণ্টার ফরম্যাটে সময় নেবে
+    const currentHour = now.getHours(); 
     let greeting = 'Good Evening';
     
     if (currentHour >= 5 && currentHour < 12) {
@@ -112,8 +112,8 @@ taskList.addEventListener('click', (e) => {
     const deleteBtn = e.target.closest('.delete-btn');
     if (deleteBtn) {
         const index = deleteBtn.getAttribute('data-index');
-        tasks.splice(index, 1); // Array থেকে রিমুভ
-        localStorage.setItem('dashboard_tasks', JSON.stringify(tasks)); // স্টোরেজ আপডেট
+        tasks.splice(index, 1); 
+        localStorage.setItem('dashboard_tasks', JSON.stringify(tasks)); 
         renderTasks();
         return;
     }
@@ -121,10 +121,56 @@ taskList.addEventListener('click', (e) => {
     const taskContent = e.target.closest('.task-content');
     if (taskContent) {
         const index = taskContent.getAttribute('data-index');
-        tasks[index].completed = !tasks[index].completed; // false থাকলে true হবে, true থাকলে false
+        tasks[index].completed = !tasks[index].completed; 
         localStorage.setItem('dashboard_tasks', JSON.stringify(tasks));
         renderTasks();
     }
+});
+// --- Focus Timer Logic ---
+let timerInterval;
+let timeLeft = 25 * 60; 
+let isTimerRunning = false;
+const timeDisplay = document.getElementById('time-display');
+const startTimerBtn = document.getElementById('start-timer');
+const pauseTimerBtn = document.getElementById('pause-timer');
+const resetTimerBtn = document.getElementById('reset-timer');
+
+function updateTimerDisplay() {
+    const minutes = Math.floor(timeLeft / 60);
+    const seconds = timeLeft % 60;
+    
+    const formattedTime = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    timeDisplay.textContent = formattedTime;
+}
+
+// Start Button Logic
+startTimerBtn.addEventListener('click', () => {
+    if (!isTimerRunning) {
+        isTimerRunning = true;
+        timerInterval = setInterval(() => {
+            if (timeLeft > 0) {
+                timeLeft--;
+                updateTimerDisplay();
+            } else {
+                clearInterval(timerInterval); 
+                isTimerRunning = false;
+                alert("Time's up! Take a 5-minute break.");
+            }
+        }, 1000);
+    }
+});
+
+pauseTimerBtn.addEventListener('click', () => {
+    clearInterval(timerInterval);
+    isTimerRunning = false;
+});
+
+// Reset Button Logic
+resetTimerBtn.addEventListener('click', () => {
+    clearInterval(timerInterval);
+    isTimerRunning = false;
+    timeLeft = 25 * 60;
+    updateTimerDisplay();
 });
 
 renderTasks();
