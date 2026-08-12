@@ -412,3 +412,51 @@ body {
     text-decoration: line-through;
     opacity: 0.7;
 }
+/* --- Quote Widget Styles --- */
+.quote-widget {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.quote-widget h3 {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+}
+
+.quote-content {
+    margin: 15px 0;
+}
+
+#quote-text {
+    font-size: 1.05rem;
+    font-style: italic;
+    margin-bottom: 10px;
+    line-height: 1.4;
+}
+
+#quote-author {
+    font-size: 0.9rem;
+    color: var(--secondary-text);
+    font-weight: 600;
+}
+
+#new-quote-btn {
+    background-color: transparent;
+    border: 1px solid var(--primary-color);
+    color: var(--primary-color);
+    padding: 8px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+#new-quote-btn:hover {
+    background-color: var(--primary-color);
+    color: #fff;
+}

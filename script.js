@@ -182,69 +182,95 @@ resetTimerBtn.addEventListener("click", () => {
 });
 
 // --- Quick Notes Logic (Auto-save) ---
-const quickNotes = document.getElementById("quick-notes");
+const quickNotes = document.getElementById('quick-notes');
 
-const savedNotes = localStorage.getItem("dashboard_notes");
+const savedNotes = localStorage.getItem('dashboard_notes');
 if (savedNotes) {
-  quickNotes.value = savedNotes;
+    quickNotes.value = savedNotes;
 }
 
-quickNotes.addEventListener("input", (e) => {
-  localStorage.setItem("dashboard_notes", e.target.value);
+quickNotes.addEventListener('input', (e) => {
+    localStorage.setItem('dashboard_notes', e.target.value);
 });
 // --- Main Focus Logic (3D Flip Card) ---
-const focusInput = document.getElementById("focus-input");
-const focusFlipper = document.getElementById("focus-flipper");
-const focusText = document.getElementById("focus-text");
-const focusCheck = document.getElementById("focus-check");
-const focusDelete = document.getElementById("focus-delete");
-const focusDisplayContent = document.getElementById("focus-display-content");
+const focusInput = document.getElementById('focus-input');
+const focusFlipper = document.getElementById('focus-flipper');
+const focusText = document.getElementById('focus-text');
+const focusCheck = document.getElementById('focus-check');
+const focusDelete = document.getElementById('focus-delete');
+const focusDisplayContent = document.getElementById('focus-display-content');
 
-let savedFocus = JSON.parse(localStorage.getItem("dashboard_focus"));
+let savedFocus = JSON.parse(localStorage.getItem('dashboard_focus'));
 
 function updateFocusUI() {
-  if (savedFocus && savedFocus.text) {
-    focusText.textContent = savedFocus.text;
-    focusFlipper.classList.add("flipped");
+    if (savedFocus && savedFocus.text) {
+        focusText.textContent = savedFocus.text;
+        focusFlipper.classList.add('flipped'); 
 
-    if (savedFocus.completed) {
-      focusDisplayContent.classList.add("focus-completed");
-      focusCheck.classList.replace(
-        "ri-checkbox-blank-circle-line",
-        "ri-checkbox-circle-fill",
-      );
+        if (savedFocus.completed) {
+            focusDisplayContent.classList.add('focus-completed');
+            focusCheck.classList.replace('ri-checkbox-blank-circle-line', 'ri-checkbox-circle-fill');
+        } else {
+            focusDisplayContent.classList.remove('focus-completed');
+            focusCheck.classList.replace('ri-checkbox-circle-fill', 'ri-checkbox-blank-circle-line');
+        }
     } else {
-      focusDisplayContent.classList.remove("focus-completed");
-      focusCheck.classList.replace(
-        "ri-checkbox-circle-fill",
-        "ri-checkbox-blank-circle-line",
-      );
+        focusFlipper.classList.remove('flipped'); 
+        focusInput.value = '';
     }
-  } else {
-    focusFlipper.classList.remove("flipped");
-    focusInput.value = "";
-  }
 }
 
 updateFocusUI();
 
-focusInput.addEventListener("keypress", (e) => {
-  if (e.key === "Enter" && e.target.value.trim() !== "") {
-    savedFocus = { text: e.target.value.trim(), completed: false };
-    localStorage.setItem("dashboard_focus", JSON.stringify(savedFocus));
+focusInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter' && e.target.value.trim() !== '') {
+        savedFocus = { text: e.target.value.trim(), completed: false };
+        localStorage.setItem('dashboard_focus', JSON.stringify(savedFocus));
+        updateFocusUI();
+    }
+});
+
+focusCheck.addEventListener('click', () => {
+    savedFocus.completed = !savedFocus.completed;
+    localStorage.setItem('dashboard_focus', JSON.stringify(savedFocus));
     updateFocusUI();
-  }
 });
 
-focusCheck.addEventListener("click", () => {
-  savedFocus.completed = !savedFocus.completed;
-  localStorage.setItem("dashboard_focus", JSON.stringify(savedFocus));
-  updateFocusUI();
+focusDelete.addEventListener('click', () => {
+    savedFocus = null; 
+    localStorage.removeItem('dashboard_focus');
+    updateFocusUI(); 
 });
 
-focusDelete.addEventListener("click", () => {
-  savedFocus = null;
-  localStorage.removeItem("dashboard_focus");
-  updateFocusUI();
-});
+// --- Daily Quote Widget Logic ---
+const quoteText = document.getElementById('quote-text');
+const quoteAuthor = document.getElementById('quote-author');
+const newQuoteBtn = document.getElementById('new-quote-btn');
+
+// Array of motivational quotes
+const localQuotes = [
+    { text: "The secret of getting ahead is getting started.", author: "Mark Twain" },
+    { text: "It always seems impossible until it's done.", author: "Nelson Mandela" },
+    { text: "Don't watch the clock; do what it does. Keep going.", author: "Sam Levenson" },
+    { text: "Quality is not an act, it is a habit.", author: "Aristotle" },
+    { text: "Success is not final; failure is not fatal: It is the courage to continue that counts.", author: "Winston Churchill" },
+    { text: "Action is the foundational key to all success.", author: "Pablo Picasso" }
+];
+
+// Function to pick and display a random quote
+function getNewQuote() {
+    // Generate a random index based on the length of the quotes array
+    const randomIndex = Math.floor(Math.random() * localQuotes.length);
+    const quote = localQuotes[randomIndex];
+    
+    // Update the DOM with the selected quote and author
+    quoteText.textContent = `"${quote.text}"`;
+    quoteAuthor.textContent = `- ${quote.author}`;
+}
+
+// Event listener for the 'New Quote' button
+newQuoteBtn.addEventListener('click', getNewQuote);
+
+// Load a random quote as soon as the page opens
+getNewQuote();
 renderTasks();
