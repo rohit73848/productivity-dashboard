@@ -181,4 +181,15 @@ resetTimerBtn.addEventListener("click", () => {
   updateTimerDisplay();
 });
 
+// --- Quick Notes Logic (Auto-save) ---
+const quickNotes = document.getElementById('quick-notes');
+
+const savedNotes = localStorage.getItem('dashboard_notes');
+if (savedNotes) {
+    quickNotes.value = savedNotes;
+}
+
+quickNotes.addEventListener('input', (e) => {
+    localStorage.setItem('dashboard_notes', e.target.value);
+});
 renderTasks();
