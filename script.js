@@ -1,176 +1,184 @@
-const themeBtn = document.getElementById('theme-btn');
-const themeIcon = document.getElementById('theme-icon');
+const themeBtn = document.getElementById("theme-btn");
+const themeIcon = document.getElementById("theme-icon");
 
-const currentTheme = localStorage.getItem('theme');
+const currentTheme = localStorage.getItem("theme");
 
-if (currentTheme === 'dark') {
-    document.documentElement.setAttribute('data-theme', 'dark');
-    themeIcon.classList.replace('ri-moon-line', 'ri-sun-line');
+if (currentTheme === "dark") {
+  document.documentElement.setAttribute("data-theme", "dark");
+  themeIcon.classList.replace("ri-moon-line", "ri-sun-line");
 }
 
-themeBtn.addEventListener('click', () => {
-    let theme = document.documentElement.getAttribute('data-theme');
-    
-    if (theme === 'dark') {
-        document.documentElement.removeAttribute('data-theme');
-        themeIcon.classList.replace('ri-sun-line', 'ri-moon-line');
-        localStorage.setItem('theme', 'light'); // লোকাল স্টোরেজে সেভ
-    } else {
-        document.documentElement.setAttribute('data-theme', 'dark');
-        themeIcon.classList.replace('ri-moon-line', 'ri-sun-line');
-        localStorage.setItem('theme', 'dark'); // লোকাল স্টোরেজে সেভ
-    }
+themeBtn.addEventListener("click", () => {
+  let theme = document.documentElement.getAttribute("data-theme");
+
+  if (theme === "dark") {
+    document.documentElement.removeAttribute("data-theme");
+    themeIcon.classList.replace("ri-sun-line", "ri-moon-line");
+    localStorage.setItem("theme", "light"); // লোকাল স্টোরেজে সেভ
+  } else {
+    document.documentElement.setAttribute("data-theme", "dark");
+    themeIcon.classList.replace("ri-moon-line", "ri-sun-line");
+    localStorage.setItem("theme", "dark"); // লোকাল স্টোরেজে সেভ
+  }
 });
 
 // --- Clock and Greeting Logic ---
-const timeElement = document.getElementById('current-time');
-const amPmElement = document.getElementById('am-pm');
-const greetingElement = document.getElementById('greeting-message');
-const dateElement = document.getElementById('current-date');
+const timeElement = document.getElementById("current-time");
+const amPmElement = document.getElementById("am-pm");
+const greetingElement = document.getElementById("greeting-message");
+const dateElement = document.getElementById("current-date");
 
 function updateClockAndGreeting() {
-    const now = new Date();
-    
-    // --- 1. Time Set Up---
-    let hours = now.getHours();
-    let minutes = now.getMinutes();
-    const ampm = hours >= 12 ? 'PM' : 'AM';
-    
-    hours = hours % 12;
-    hours = hours ? hours : 12;
-    minutes = minutes < 10 ? '0' + minutes : minutes;
-    
-    timeElement.textContent = `${hours}:${minutes}`;
-    amPmElement.textContent = ampm;
+  const now = new Date();
 
-    // --- 2. Date SetUp ---
-    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-    dateElement.textContent = now.toLocaleDateString('en-US', options);
+  // --- 1. Time Set Up---
+  let hours = now.getHours();
+  let minutes = now.getMinutes();
+  const ampm = hours >= 12 ? "PM" : "AM";
 
-    // --- 3. Greeting Logic---
-    const currentHour = now.getHours(); 
-    let greeting = 'Good Evening';
-    
-    if (currentHour >= 5 && currentHour < 12) {
-        greeting = 'Good Morning';
-    } else if (currentHour >= 12 && currentHour < 17) {
-        greeting = 'Good Afternoon';
-    }
-    
-    greetingElement.textContent = `${greeting}, Boss!`; 
+  hours = hours % 12;
+  hours = hours ? hours : 12;
+  minutes = minutes < 10 ? "0" + minutes : minutes;
+
+  timeElement.textContent = `${hours}:${minutes}`;
+  amPmElement.textContent = ampm;
+
+  // --- 2. Date SetUp ---
+  const options = {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  };
+  dateElement.textContent = now.toLocaleDateString("en-US", options);
+
+  // --- 3. Greeting Logic (Updated) ---
+  const currentHour = now.getHours();
+  let greeting = "";
+
+  if (currentHour >= 5 && currentHour < 12) {
+    greeting = "Good Morning";
+  } else if (currentHour >= 12 && currentHour < 17) {
+    greeting = "Good Afternoon";
+  } else if (currentHour >= 17 && currentHour < 22) {
+    greeting = "Good Evening";
+  } else {
+    greeting = "Good Night";
+  }
+
+  greetingElement.textContent = `${greeting}, Boss!`;
 }
 
 updateClockAndGreeting();
 setInterval(updateClockAndGreeting, 1000);
 // --- To-Do List Logic ---
-const taskInput = document.getElementById('task-input');
-const addTaskBtn = document.getElementById('add-task-btn');
-const taskList = document.getElementById('task-list');
+const taskInput = document.getElementById("task-input");
+const addTaskBtn = document.getElementById("add-task-btn");
+const taskList = document.getElementById("task-list");
 
-let tasks = JSON.parse(localStorage.getItem('dashboard_tasks')) || [];
+let tasks = JSON.parse(localStorage.getItem("dashboard_tasks")) || [];
 
 function renderTasks() {
-    taskList.innerHTML = ''; 
+  taskList.innerHTML = "";
 
-    tasks.forEach((task, index) => {
-        const li = document.createElement('li');
-        li.className = `task-item ${task.completed ? 'completed' : ''}`;
-        
-        li.innerHTML = `
+  tasks.forEach((task, index) => {
+    const li = document.createElement("li");
+    li.className = `task-item ${task.completed ? "completed" : ""}`;
+
+    li.innerHTML = `
             <div class="task-content" data-index="${index}">
-                <i class="${task.completed ? 'ri-checkbox-circle-fill' : 'ri-checkbox-blank-circle-line'}"></i>
+                <i class="${task.completed ? "ri-checkbox-circle-fill" : "ri-checkbox-blank-circle-line"}"></i>
                 <span class="task-text">${task.text}</span>
             </div>
             <button class="delete-btn" data-index="${index}">
                 <i class="ri-delete-bin-line"></i>
             </button>
         `;
-        taskList.appendChild(li);
-    });
+    taskList.appendChild(li);
+  });
 }
 
 // New Task Add Logic
 function addTask() {
-    const text = taskInput.value.trim();
-    if (text !== '') {
-        tasks.push({ text: text, completed: false });
-        localStorage.setItem('dashboard_tasks', JSON.stringify(tasks));
-        taskInput.value = ''; 
-        renderTasks(); 
-    }
+  const text = taskInput.value.trim();
+  if (text !== "") {
+    tasks.push({ text: text, completed: false });
+    localStorage.setItem("dashboard_tasks", JSON.stringify(tasks));
+    taskInput.value = "";
+    renderTasks();
+  }
 }
 
-addTaskBtn.addEventListener('click', addTask);
+addTaskBtn.addEventListener("click", addTask);
 
-taskInput.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') addTask();
+taskInput.addEventListener("keypress", (e) => {
+  if (e.key === "Enter") addTask();
 });
 
 // --- Event Delegation / Event Bubbling ---
-taskList.addEventListener('click', (e) => {
-    
-    const deleteBtn = e.target.closest('.delete-btn');
-    if (deleteBtn) {
-        const index = deleteBtn.getAttribute('data-index');
-        tasks.splice(index, 1); 
-        localStorage.setItem('dashboard_tasks', JSON.stringify(tasks)); 
-        renderTasks();
-        return;
-    }
+taskList.addEventListener("click", (e) => {
+  const deleteBtn = e.target.closest(".delete-btn");
+  if (deleteBtn) {
+    const index = deleteBtn.getAttribute("data-index");
+    tasks.splice(index, 1);
+    localStorage.setItem("dashboard_tasks", JSON.stringify(tasks));
+    renderTasks();
+    return;
+  }
 
-    const taskContent = e.target.closest('.task-content');
-    if (taskContent) {
-        const index = taskContent.getAttribute('data-index');
-        tasks[index].completed = !tasks[index].completed; 
-        localStorage.setItem('dashboard_tasks', JSON.stringify(tasks));
-        renderTasks();
-    }
+  const taskContent = e.target.closest(".task-content");
+  if (taskContent) {
+    const index = taskContent.getAttribute("data-index");
+    tasks[index].completed = !tasks[index].completed;
+    localStorage.setItem("dashboard_tasks", JSON.stringify(tasks));
+    renderTasks();
+  }
 });
 // --- Focus Timer Logic ---
 let timerInterval;
-let timeLeft = 25 * 60; 
+let timeLeft = 25 * 60;
 let isTimerRunning = false;
-const timeDisplay = document.getElementById('time-display');
-const startTimerBtn = document.getElementById('start-timer');
-const pauseTimerBtn = document.getElementById('pause-timer');
-const resetTimerBtn = document.getElementById('reset-timer');
+const timeDisplay = document.getElementById("time-display");
+const startTimerBtn = document.getElementById("start-timer");
+const pauseTimerBtn = document.getElementById("pause-timer");
+const resetTimerBtn = document.getElementById("reset-timer");
 
 function updateTimerDisplay() {
-    const minutes = Math.floor(timeLeft / 60);
-    const seconds = timeLeft % 60;
-    
-    const formattedTime = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-    timeDisplay.textContent = formattedTime;
+  const minutes = Math.floor(timeLeft / 60);
+  const seconds = timeLeft % 60;
+
+  const formattedTime = `${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+  timeDisplay.textContent = formattedTime;
 }
 
 // Start Button Logic
-startTimerBtn.addEventListener('click', () => {
-    if (!isTimerRunning) {
-        isTimerRunning = true;
-        timerInterval = setInterval(() => {
-            if (timeLeft > 0) {
-                timeLeft--;
-                updateTimerDisplay();
-            } else {
-                clearInterval(timerInterval); 
-                isTimerRunning = false;
-                alert("Time's up! Take a 5-minute break.");
-            }
-        }, 1000);
-    }
+startTimerBtn.addEventListener("click", () => {
+  if (!isTimerRunning) {
+    isTimerRunning = true;
+    timerInterval = setInterval(() => {
+      if (timeLeft > 0) {
+        timeLeft--;
+        updateTimerDisplay();
+      } else {
+        clearInterval(timerInterval);
+        isTimerRunning = false;
+        alert("Time's up! Take a 5-minute break.");
+      }
+    }, 1000);
+  }
 });
 
-pauseTimerBtn.addEventListener('click', () => {
-    clearInterval(timerInterval);
-    isTimerRunning = false;
+pauseTimerBtn.addEventListener("click", () => {
+  clearInterval(timerInterval);
+  isTimerRunning = false;
 });
 
 // Reset Button Logic
-resetTimerBtn.addEventListener('click', () => {
-    clearInterval(timerInterval);
-    isTimerRunning = false;
-    timeLeft = 25 * 60;
-    updateTimerDisplay();
+resetTimerBtn.addEventListener("click", () => {
+  clearInterval(timerInterval);
+  isTimerRunning = false;
+  timeLeft = 25 * 60;
+  updateTimerDisplay();
 });
 
 renderTasks();
