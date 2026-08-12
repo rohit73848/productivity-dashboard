@@ -10,3 +10,57 @@ html,body{
     height: 100%;
     width: 100%;
 }
+:root {
+    --bg-color: #f4f7fe;
+    --text-color: #2b3674;
+    --card-bg: #ffffff;
+    --primary-color: #4318ff;
+    --secondary-text: #a3aed1;
+    --shadow: 0px 10px 20px rgba(0, 0, 0, 0.05);
+    --transition-speed: 0.4s;
+}
+[data-theme="dark"] {
+    --bg-color: #0b1437;
+    --text-color: #ffffff;
+    --card-bg: #111c44;
+    --primary-color: #7551ff;
+    --secondary-text: #8f9bba;
+    --shadow: 0px 10px 20px rgba(0, 0, 0, 0.2);
+}
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease;
+}
+.dashboard-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 0;
+}
+
+.theme-toggle-btn {
+    background-color: var(--card-bg);
+    color: var(--text-color);
+    border: none;
+    height: 45px;
+    width: 45px;
+    border-radius: 50%;
+    font-size: 20px;
+    cursor: pointer;
+    box-shadow: var(--shadow);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: transform 0.2s ease, background-color var(--transition-speed) ease;
+}
+
+.theme-toggle-btn:hover {
+    transform: scale(1.1);
+}
